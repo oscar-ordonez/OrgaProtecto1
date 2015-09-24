@@ -31,6 +31,12 @@ void agregarCiudad();
 void eliminarCiudad( int );
 void eliminarPersona(long);
 void eliminarNumero(int);
+void modificarPersona();
+void modificarCiudad();	
+void modificarNumero();	
+void buscarPersona(unsigned long);
+void buscarCiudad(int);
+void buscarNumero(int);		
 
 vector<string> llaveCliente;
 vector<string> rrnCliente;
@@ -45,15 +51,16 @@ int main(int argc, char* argv[]){
 	
 	int respuestaContinuar;
 	do{
-		cout << "Menu" << endl << "1. Pasar Archivos a binario e indexarlos"
+		cout << endl << "********************Menu********************" << endl << "1. Pasar Archivos a binario e indexarlos"
 			 << endl << "2. Visualizar" << endl << "3. Agregar " << endl 
-			 << "4. Eliminar" << endl <<"5. Salir" << endl;
+			 << "4. Eliminar" << endl << "5. Modificar" << endl 
+			 << "6. Buscar "<< "7. Salir" << endl << "Ingrese su opcion: ";
 		cin >> respuestaContinuar;
 
 		//Pasar Archivo a binario
 		if(respuestaContinuar == 1){
 			convertirPersonas();
-			cout << "convertirPersonas";
+			cout << endl << "convertirPersonas";
 			indexarPersonas();
 			cout << endl << "personas indexadas exitosamente" << endl;
 			convertirCiudad();
@@ -68,7 +75,7 @@ int main(int argc, char* argv[]){
 		if(respuestaContinuar == 2){				
 
 			int op = 0;
-			cout << endl << "Visualizar \n1. Personas\n2. Ciudades\n3. Numeros" << endl;
+			cout << endl << "********************Visualizar******************** \n1. Personas\n2. Ciudades\n3. Numeros" << endl << "Ingrese su opcion: ";
 			cin >> 	op;
 			if(op == 1){
 				 mostrarPersonas();
@@ -79,11 +86,11 @@ int main(int argc, char* argv[]){
 			if(op==3){
 				mostrarNumero();
 			}	
-					}
+		}
 
 		if(respuestaContinuar == 3){
 			int op = 0;
-			cout << endl << "Agregar \n1. Personas\n2. Ciudades\n3. Numeros" << endl;
+			cout << endl << "********************Agregar******************** \n1. Personas\n2. Ciudades\n3. Numeros" << endl << "Ingrese su opcion: ";
 			cin >> 	op;
 			if(op == 1){
 				 agregarPersona();
@@ -99,31 +106,69 @@ int main(int argc, char* argv[]){
 
 		if(respuestaContinuar == 4){
 			int op = 0;
-			cout << endl << "Eliminar \n1. Personas\n2. Ciudades\n3. Numeros" << endl;
+			cout << endl << "********************Eliminar******************** \n1. Personas\n2. Ciudades\n3. Numeros" << endl << "Ingrese su opcion: ";
 			cin >> 	op;
 			if(op == 1){
 				long identidad;
-				cout << "Ingrese la identidad de la persona que desea borrar" << endl;
+				cout << "ID del Cliente: ";
 				cin >> identidad;
 				 eliminarPersona(identidad);
-
+			}
 			if(op==2){
-				int id = 0;
-				cout << "Ingrese el Id de la ciudad que desea borrar" << endl;
-				cin >> id;
-				eliminarCiudad(id);
+				int idCiudad = 0;
+				cout << "ID de la Ciudad: ";
+				cin >> idCiudad;
+				eliminarCiudad(idCiudad);
 			}	
 			if(op==3){
 				int num = 0;
-				cout << "Ingrese el numero que desea borrar" << endl;
+				cout << "Numero: ";
 				cin >> num;
 				eliminarNumero(num);
 			}	
 
 		}
+		if(respuestaContinuar == 5){
+			int op = 0;
+			cout << endl << "********************Modificar******************** \n1. Personas\n2. Ciudades\n3. Numeros" << endl << "Ingrese su opcion: ";
+			cin >> 	op;
+			if(op == 1){
+				 modificarPersona();
+			}
+			if(op==2){
+				modificarCiudad();
+			}	
+			if(op==3){
+				modificarNumero();
+			}	
 
-	}
-	}while(respuestaContinuar != 5);
+		}
+
+		if(respuestaContinuar == 6){
+			int op = 0; 
+			cout << endl << "********************Buscar******************** \n1. Cliente\n2. Ciudades\n3. Numeros" << endl << "Ingrese su opcion: ";
+			cin >> 	op;
+			if(op == 1){
+				long buscar = 0;
+				cout << "Identidad:" << endl;
+				cin >> buscar;
+				buscarPersona(buscar);
+
+			}
+			if(op==2){
+				int buscar = 0;
+				cout << "ID Ciudad: " << endl;
+				cin >> buscar; 
+				buscarCiudad(buscar);
+			}	
+			if(op==3){
+				int buscar = 0;
+				cout << "Ingrese numero:" << endl;
+				cin >> buscar;
+				buscarNumero(buscar);
+			}	
+		}
+	}while(respuestaContinuar != 7);
 	return 0;
 
 }
@@ -141,7 +186,7 @@ void convertirPersonas(){
 	archivoBinario.write(reinterpret_cast <char*> (&rrn), sizeof(int));
 	archivoBinario.write(reinterpret_cast <char*> (&recorriendo), sizeof(int));
 	archivoBinario.write(reinterpret_cast <char*> (&bandera), sizeof(bool));
-	cout << "entra" << endl;
+	//cout << "entra" << endl;
 	while(true){
 		if(archivo.eof()){
 			break;
@@ -191,7 +236,7 @@ void convertirPersonas(){
   		archivoBinario.write(reinterpret_cast<char*>(&recorriendo), sizeof(recorriendo));
   		archivoBinario.seekp(sizeof(int)*2 + 1 + (recorriendo*63));
 	}
-	cout << "sale" << endl;
+	//cout << "sale" << endl;
 	// Visualizar el contenido
 	archivo.close();
 	archivoBinario.close();
@@ -203,7 +248,7 @@ void indexarPersonas(){
 	int contador = 0;
 	ifstream leerArchivo("personas.bin",ios::binary);
 	leerArchivo.seekg(sizeof(int) + sizeof(int) + sizeof(bool));
-	cout << "antes del while" << endl;
+	//cout << "antes del while" << endl;
 	while(true){
 		stringstream rrn;
 		if(leerArchivo.eof()){
@@ -239,6 +284,7 @@ void indexarPersonas(){
 
 			unsigned long llave = atol(cadena.str().c_str());
 			int posicion = posicionIndice(llaveCliente,llave);
+
 			if (posicion == -1){
 				llaveCliente.push_back(cadena.str());
 				rrnCliente.push_back( rrn.str());
@@ -249,7 +295,7 @@ void indexarPersonas(){
 		}
 	}
 	contador++;
-	cout << "despues" << endl;
+	//cout << "despues" << endl;
 }
 
 void mostrarPersonas(){
@@ -257,28 +303,23 @@ void mostrarPersonas(){
 	int recorriendo = 0;
 	int final = 0;
 	bool bandera = 0;
-	char id[15];
-	char nombre[40];
-	char genero[2];
-	char ciudad[6];
+	char id[15], nombre[40], genero[2], ciudad[6];
 	ifstream readFile("personas.bin",ios::binary);
 	readFile.read( reinterpret_cast<char*>(&rrn), sizeof(int) );
 	readFile.read( reinterpret_cast<char*>(&recorriendo), sizeof(int) );
 	readFile.read( reinterpret_cast<char*>(&bandera), sizeof(bool)  );
 	readFile.seekg(sizeof(int)+sizeof(int)+sizeof(bool));
+
 	while(final < recorriendo){
-		/*if(readFile.eof())
-			break;*/
+		
 		readFile.read((char*)id, sizeof(id));
 		readFile.read((char*)nombre, sizeof(nombre));
 		readFile.read((char*)genero, sizeof(genero));
 		readFile.read((char*)ciudad, sizeof(ciudad));
+
 		if( id[0] != '*'){
-			cout <<"----------------------------------------------------------------------------"<<endl;
-			cout << "Id: " << id << endl;
-			cout << "Nombre: " << nombre <<endl; 
-			cout << "Genero: " << genero << endl;
-			cout << "Id Ciudad: " << ciudad <<endl;
+			cout <<"********************************************************************************************************" << endl << endl;
+			cout << "ID: " << id << "\t\tNombre: "<< nombre << "\t\tGénero: " << genero << "\t\tID Ciudad: " << ciudad <<endl;
 		}
 		final++;
 
@@ -339,60 +380,51 @@ int posicionIndice(vector <string> llaveIndice, unsigned long llave){
 }
 
 void indexarCiudad(){
+	//se resetea llaveCiudad y rrnCiudad
 	llaveCiudad.clear();
 	rrnCiudad.clear();
+	int contador = 0;
 	ifstream leer("ciudades.bin",ios::binary);
 	leer.seekg(HeaderSize);
-	int cont = 0;
 
  	while(true){
 		stringstream rrn ;
 		if(leer.eof()){
 			break;
 		}
-		char IdCiudad[4];
-		char NameCiudad[40];
-		leer.read(reinterpret_cast<char*>(&IdCiudad), sizeof(IdCiudad));
-		leer.read(reinterpret_cast<char*>(&NameCiudad), sizeof(NameCiudad));
-		bool iguales = false;
-		for (int i = 0; i < sizeof(IdCiudad)-1; i++){
-			if(IdCiudad[i] == '*'){
-				iguales = true;	
+		char idCiudad[6], nombreCiudad[40];
+		leer.read(reinterpret_cast<char*>(&idCiudad), sizeof(idCiudad));
+		leer.read(reinterpret_cast<char*>(&nombreCiudad), sizeof(nombreCiudad));
+		bool verificar = false;
+		for (int i = 0; i < sizeof(idCiudad)-1; i++){
+			if(idCiudad[i] == '*'){
+				verificar = true;	
 				break;			
 			}
 		}
-		if(!iguales){
+		if(!verificar){
 			stringstream ss;
-			for (int i = 0; i < sizeof(IdCiudad); i++){							
-				ss<< IdCiudad[i];	
+			for (int i = 0; i < sizeof(idCiudad); i++){							
+				ss << idCiudad[i];	
 			}
-			rrn<< cont;
-			int key = atoi(ss.str().c_str());
-			int position = posicionIndicePrimario(llaveCiudad
-		, key);
-			if (position == -1){
+			rrn<< contador;
+			int key = atoi(ss.str().c_str()), posicion = posicionIndicePrimario(llaveCiudad, key);
+			if (posicion == -1){
 				llaveCiudad
 		.push_back(ss.str());
 				rrnCiudad.push_back(rrn.str());
 			}else{
 				llaveCiudad
 		.insert(llaveCiudad
-			.begin() + position, ss.str());
-				rrnCiudad.insert(rrnCiudad.begin() + position, rrn.str());
+			.begin() + posicion, ss.str());
+				rrnCiudad.insert(rrnCiudad.begin() + posicion, rrn.str());
 			}
 
 		}
-		cont++;
+		contador++;
 
 	}
-	/*for (int i = 0; i < llaveCiudad.size(); i++)
-	{
-		cout << "Key: " << llaveCiudad
-.at(i) << " RRN: " << rrnCiudad.at(i)<< endl;
-	}*/
 	leer.close();
-	//writeIndexCity();
-	//ListIndex("IndexCity.bin");
 }
 int posicionIndicePrimario(vector<string> indexKey  , int key){
     int minimo = 0;
@@ -454,26 +486,29 @@ void convertirCiudad(){
 	binario.write( reinterpret_cast<char*>(&recorrido), sizeof(int) );
 	binario.write( reinterpret_cast<char*>(&bandera), sizeof(bool)  );
 	char ultimo;
+
 	while(archivo>>ultimo){
-		/*if(archivo.eof())
-			break;*/
+
 		char IdCiudad[5];
 		char NameCiudad[40];
 		string temp = "", temp1 = "";
 		getline(archivo, temp, '@');
 		getline(archivo, temp1, '@');
+
 		for (int i = 0; i < 5; i++){
 			IdCiudad[i] = temp[i];
 		}		
+
 		for (int i = 0; i < 40; i++){
 			NameCiudad[i] = temp1[i];
 		}
+
 		bool CadenaVacia = true;
-		for (int i = 0; i < sizeof(IdCiudad); i++)
-		{
+		for (int i = 0; i < sizeof(IdCiudad); i++){
 			if(IdCiudad[i] != '\0' && IdCiudad[i] != ' ')
 				CadenaVacia = false;
 		}
+
 		if(!CadenaVacia){			
 			binario.write((char*)IdCiudad, sizeof(IdCiudad));
 			binario.write((char*)NameCiudad, sizeof(NameCiudad));
@@ -485,61 +520,60 @@ void convertirCiudad(){
 	}	
 	archivo.close();
 	binario.close();
-	//ListCity();
 }
 
 void mostrarCiudad(){
 	int rrn=-1, recorrido = 0, final = 0;
 	bool bandera = 0;
-	char IdCiudad[5];
-	char NameCiudad[40];
-	ifstream readFile("ciudades.bin",ios::binary);
-	readFile.read( reinterpret_cast<char*>(&rrn), sizeof(int) );
-	readFile.read( reinterpret_cast<char*>(&recorrido), sizeof(int) );
-	readFile.read( reinterpret_cast<char*>(&bandera), sizeof(bool)  );
-	readFile.seekg(sizeof(int)+sizeof(int)+sizeof(bool));
-	//cout << rrn <<"||"<< recorrido<<"||" << bandera <<endl;
- 	while(final < recorrido){
+	char idCiudad[5], nombreCiudad[40];
+	ifstream leer("ciudades.bin",ios::binary);
+	leer.read( reinterpret_cast<char*>(&rrn), sizeof(int) );
+	leer.read( reinterpret_cast<char*>(&recorrido), sizeof(int) );
+	leer.read( reinterpret_cast<char*>(&bandera), sizeof(bool)  );
+	leer.seekg(sizeof(int)+sizeof(int)+sizeof(bool));
 
-		/*if(readFile.eof())
-			break;*/
-		char IdCiudad[5];
-		char NameCiudad[40];
-		readFile.read((char*)IdCiudad, sizeof(IdCiudad));
-		readFile.read((char*)NameCiudad, sizeof(NameCiudad));
-		if( IdCiudad[0] != '*'){
-			cout <<"----------------------------------------------------------------------------"<<endl;
-			cout << "Id Ciudad: "<<IdCiudad <<endl;
-			cout << "Nombre de la ciudad: " <<NameCiudad<<endl;
+ 	while(final < recorrido){
+		char idCiudad[5];
+		char nombreCiudad[40];
+		leer.read((char*)idCiudad, sizeof(idCiudad));
+		leer.read((char*)nombreCiudad, sizeof(nombreCiudad));
+
+		if( idCiudad[0] != '*'){
+			cout <<"************************************************************************" << endl << endl;
+			cout << "ID de la Ciudad: " << idCiudad << "\t\tNombre: " << nombreCiudad << endl;
 		}
+
 		final++;
 	}
-	readFile.close();
+
+	leer.close();
 }
 
 void convertirNumero(){
-	ifstream archivo("numero.txt");
+	ifstream archivo("numeros.txt");
 	ofstream binario("numeros.bin");
 	int rrn=-1, recorrido = 0;
-	bool bandera = 0;
+	bool bandera = 0;	
+	char finalArchivo;
 	binario.write( reinterpret_cast<char*>(&rrn), sizeof(int) );
 	binario.write( reinterpret_cast<char*>(&recorrido), sizeof(int) );
 	binario.write( reinterpret_cast<char*>(&bandera), sizeof(bool)  );
-	char finalArchivo;
+
 	while(archivo>>finalArchivo){
-		/*if(archivo.eof())
-			break;*/
 		char Numero[9];
 		char Id[15];
 		string temp = "", temp1 = "";
 		getline(archivo, temp, '@');
 		getline(archivo, temp1, '@');
+
 		for (int i = 0; i < sizeof(Numero); i++){
 			Numero[i] = temp[i];
 		}		
+
 		for (int i = 0; i < sizeof(Id); i++){
 			Id[i] = temp1[i];
 		}
+
 		binario.write((char*)Numero, sizeof(Numero));
 		binario.write((char*)Id, sizeof(Id));
 		recorrido++;
@@ -549,20 +583,20 @@ void convertirNumero(){
 	}	
 	archivo.close();
 	binario.close();
-	//ListNumber();
 }
 
 void mostrarNumero(){
-	cout << "entra" << endl;
+	//cout << "entra" << endl;
 	int rrn=-1, recorrido = 0,finalArchivo = 0;
 	bool bandera = 0;
-	char Numero[9];
-	char Id[14];
+	char numero[9];
+	char idCliente[15];
 	ifstream leerArchivo("numeros.bin",ios::binary);
 	leerArchivo.read( reinterpret_cast<char*>(&rrn), sizeof(int) );
 	leerArchivo.read( reinterpret_cast<char*>(&recorrido), sizeof(int) );
 	leerArchivo.read( reinterpret_cast<char*>(&bandera), sizeof(bool)  );
 	leerArchivo.seekg(sizeof(int)+sizeof(int)+sizeof(bool));
+
 	while(finalArchivo < recorrido){
 		/*if(leerArchivo.eof())
 			break;*/
@@ -571,9 +605,8 @@ void mostrarNumero(){
 		leerArchivo.read((char*)Numero, sizeof(Numero));
 		leerArchivo.read((char*)Id, sizeof(Id));
 		if( Numero[0] != '*'){
-			cout <<"----------------------------------------------------------------------------"<<endl;
-			cout << "Numero: " << Numero << endl;
-			cout << "Id Propietario: " << Id <<endl; 
+			cout <<"************************************************************************" << endl << endl;
+			cout << "ID Cliente: " << Id << "\t\tNumero: " << Numero << endl;
 		}
 		finalArchivo++;
 
@@ -650,11 +683,10 @@ void agregarPersona(){
 		streamNombre << NameClient[i];
 	}
 	int nuevaRrn = atoi(streamNombre.str().c_str());
-	cout << nuevaRrn << "°|°" << endl;
 	leerArchivo.close();
 	string leerName = "",leerId = "", leerGender = "",leerCiudad = "";
 	if(rrnHeader != -1){
-		cout << "Ingrese el Id del cliente: ";
+		cout << endl << "ID del Cliente: ";
 		cin >> leerId;
 		stringstream ss;
 		for (int i = 0; i < sizeof(IdClient); i++){
@@ -662,19 +694,19 @@ void agregarPersona(){
 			ss<< leerId[i];
 		}
 		
-		cout << "Ingrese el nombre del cliente: ";
+		cout << "Nombre: ";
 		cin >> leerName;
 		for (int i = 0; i < sizeof(NameClient); i++){
 			NameClient[i] = leerName[i];
 		}
 
-		cout << "Ingrese el genero del cliente: ";
+		cout << "Genero: ";
 		cin >> leerGender;
 		for (int i = 0; i < sizeof(Gender); i++){
 			Gender[i] = leerGender[i];
 		}
 
-		cout << "Ingrese la ciudad en la que el cliente vive: ";
+		cout << "Ciudad: ";
 		cin >> leerCiudad;
 		for (int i = 0; i < sizeof(IdCiudad); i++){
 			IdCiudad[i] = leerCiudad[i];
@@ -695,7 +727,7 @@ void agregarPersona(){
 		llaveCliente.insert(llaveCliente.begin()+ position, ss.str());
 		//TreeClient.Agregar(Index(atol(ss.str().c_str()) , rrnHeader));
 	}else{
-		cout << "Ingrese el Id del cliente: ";
+		cout << endl << "ID del Cliente: ";
 		cin >> leerId;
 		stringstream ss;
 		for (int i = 0; i < sizeof(IdClient); i++){
@@ -703,19 +735,19 @@ void agregarPersona(){
 			ss<< leerId[i];
 		}
 		
-		cout << "Ingrese el nombre del cliente: ";
+		cout << "Nombre: ";
 		cin >> leerName;
 		for (int i = 0; i < sizeof(NameClient); i++){
 			NameClient[i] = leerName[i];
 		}
 
-		cout << "Ingrese el genero del cliente: ";
+		cout << "Genero: ";
 		cin >> leerGender;
 		for (int i = 0; i < sizeof(Gender); i++){
 			Gender[i] = leerGender[i];
 		}
 
-		cout << "Ingrese la ciudad en la que el cliente vive: ";
+		cout << "Ciudad: ";
 		cin >> leerCiudad;
 		for (int i = 0; i < sizeof(IdCiudad); i++){
 			IdCiudad[i] = leerCiudad[i];
@@ -757,7 +789,7 @@ void agregarNumero(){
 	leerArchivo.close();
 	string leerId = "", leerDato = "";
 	if(rrnHeader != -1){
-		cout << "Ingrese el numero: ";
+		cout << endl << "Numero: ";
 		cin >> leerDato;
 		stringstream ss;
 		for (int i = 0; i < sizeof(Numero); i++){
@@ -765,7 +797,7 @@ void agregarNumero(){
 			ss<< leerDato[i];
 		}
 		
-		cout << "Ingrese id del cliente que posee este numero: ";
+		cout << "ID del Cliente: ";
 		cin >> leerId;
 		for (int i = 0; i < sizeof(Id); i++){
 			Id[i] = leerId[i];
@@ -783,7 +815,7 @@ void agregarNumero(){
 		llaveNumero.insert(llaveNumero.begin()+ position, ss.str());
 		//TreeNumber.Agregar(Index(atol(ss.str().c_str()) , rrnHeader));
 	}else{
-		cout << "Ingrese el numero: ";
+		cout << endl << "Numero: ";
 		cin >> leerDato;
 		stringstream ss;
 		for (int i = 0; i < sizeof(Numero); i++){
@@ -791,7 +823,7 @@ void agregarNumero(){
 			ss<< leerDato[i];
 		}
 		
-		cout << "Ingrese id del cliente que posee este numero: ";
+		cout << "ID del Cliente: ";
 		cin >> leerId;
 		for (int i = 0; i < sizeof(Id); i++){
 			Id[i] = leerId[i];
@@ -831,14 +863,14 @@ void agregarCiudad(){
 	leerArchivo.close();
 	string leerId = "", leerDato = "";
 	if(rrnHeader != -1){
-		cout << "Ingrese el Id de la ciudad: ";
+		cout << endl << "ID de la Ciudad: ";
 		cin >> leerId;
 		stringstream ss;
 		for (int i = 0; i < sizeof(IdCiudad); i++){
 			IdCiudad[i] = leerId[i];
 			ss<< leerId[i];
 		}
-		cout << "Ingrese el nombre de la ciudad: ";
+		cout << "Nombre: ";
 		cin >> leerDato;
 		for (int i = 0; i < sizeof(NameCiudad); i++){
 			NameCiudad[i] = leerDato[i];
@@ -854,7 +886,7 @@ void agregarCiudad(){
 		llaveCiudad.insert(llaveCiudad.begin()+ position, ss.str());
 		//TreeCity.Agregar(Index(atol(ss.str().c_str()) , rrnHeader));
 	}else{
-		cout << "Ingrese el Id de la ciudad: ";
+		cout << endl << "ID de la Ciudad: ";
 		cin >> leerId;
 		stringstream streamId;
 		for (int i = 0; i < sizeof(IdCiudad); i++){
@@ -862,7 +894,7 @@ void agregarCiudad(){
 			streamId<< leerId[i];
 		}
 
-		cout << "Ingrese el nombre de la ciudad: ";
+		cout << "Nombre: ";
 		cin >> leerDato;
 		for (int i = 0; i < sizeof(NameCiudad); i++){
 			NameCiudad[i] = leerDato[i];
@@ -999,3 +1031,140 @@ void eliminarNumero( int key ){
 	//TreeNumber.Eliminar(Index( (unsigned long)key , atoi(rrn.c_str())));
 	writeFile.close();
 }
+
+void modificarPersona(){
+	char IdClient[15];
+	char NameClient[40];
+	char Gender[2];
+	char IdCiudad[6];
+	string leerName = "",leerId = "", leerGender = "",leerCiudad = "",key = "";
+	cout << "Ingrese la llave del cliente que desea modificar"<<endl;
+	cin >>key;
+	int position = posicionIndice(llaveCliente, atol(key.c_str()));
+	
+	cout << "Nombre del cliente: ";
+	cin >> leerName;
+	for (int i = 0; i < sizeof(NameClient); i++){
+		NameClient[i] = leerName[i];
+	}
+
+	cout << "Genero del cliente: ";
+	cin >> leerGender;
+	for (int i = 0; i < sizeof(Gender); i++){
+		Gender[i] = leerGender[i];
+	}
+
+	cout << "Ciudad en la que el cliente vive: ";
+	cin >> leerCiudad;
+	for (int i = 0; i < sizeof(IdCiudad); i++){
+		IdCiudad[i] = leerCiudad[i];
+	}
+	ofstream writeFile("personas.bin", ofstream::in | ofstream :: out);
+	int rrnModificar = atoi(rrnCliente.at(position).c_str());
+	writeFile.seekp(HeaderSize + rrnModificar*( sizeof(IdClient) + sizeof(NameClient) + sizeof(Gender) + sizeof(IdCiudad)) + sizeof(IdClient)  );
+	writeFile.write(reinterpret_cast<char*>(&NameClient), sizeof(NameClient));
+	writeFile.write(reinterpret_cast<char*>(&Gender), sizeof(Gender));
+	writeFile.write(reinterpret_cast<char*>(&IdCiudad), sizeof(IdCiudad));
+	writeFile.close();
+	/*int position = PosicionIngresoOrdenadoAlIndice( indexClientKey  , atoi(ss.str().c_str()) );
+	indexClientKey.insert(indexClientKey.begin()+ position, ss.str());*/
+}
+
+void modificarCiudad(){
+	char IdCiudad[5];
+	char NameCiudad[40];
+	string leerId = "", leerDato = "",key = "";
+	cout << "Ingrese la llave de la ciudad que desea modificar"<<endl;
+	cin >>key;
+	int position = posicionIndicePrimario(llaveCiudad, atoi(key.c_str()));
+
+	cout << "Nuevo nombre de la ciudad: ";
+	cin >> leerDato;
+	for (int i = 0; i < sizeof(NameCiudad); i++){
+		NameCiudad[i] = leerDato[i];
+	}
+	ofstream writeFile("Ciudades.bin", ofstream::in | ofstream :: out);
+	int rrnModificar = atoi(rrnCiudad.at(position).c_str());
+	writeFile.seekp(HeaderSize + rrnModificar*( sizeof(IdCiudad) + sizeof(NameCiudad) ) + sizeof(IdCiudad)  );
+	//writeFile.write(reinterpret_cast<char*>(&IdCiudad), sizeof(IdCiudad));
+	writeFile.write(reinterpret_cast<char*>(&NameCiudad), sizeof(NameCiudad));
+	writeFile.close();
+	/*int position2 = PosicionIngresoOrdenadoAlIndice( indexCityKey  , atoi(ss.str().c_str()) );
+	indexCityKey.insert(indexCityKey.begin()+ position2, ss.str());*/
+}
+
+void modificarNumero(){
+	char registro[9];
+	char Id[14];
+	int cont = 0;
+	string leerId = "", leerDato = "",key = "";
+	cout << "Ingrese el registro que desea modificar"<<endl;
+	cin >>key;
+	int position = posicionIndicePrimario(llaveNumero, atoi(key.c_str()));
+	cout << "Nuevo id del cliente que posee este registro: ";
+	cin >> leerId;
+	for (int i = 0; i < sizeof(Id); i++){
+		Id[i] = leerId[i];
+	}
+	
+	ofstream writeFile("numeros.bin", ofstream::in | ofstream :: out);
+	int rrnModificar = atoi(rrnNumero.at(position).c_str());
+	writeFile.seekp(HeaderSize + rrnModificar*( sizeof(registro) + sizeof(Id) )+ sizeof(registro)  );
+	writeFile.write(reinterpret_cast<char*>(&Id), sizeof(Id));
+	writeFile.close();
+
+}
+
+void buscarCiudad(int key){
+
+	char IdCiudad[5], nombreCiudad[40];
+	int posicion = posicionIndice(llaveCiudad, (long)key);
+
+	ifstream leerArchivo("ciudades.bin", ios::binary);
+
+	if (posicion != -1){
+
+		string rrn = rrnCiudad.at(posicion);
+		leerArchivo.seekg(HeaderSize + atoi((rrn).c_str())*( sizeof(IdCiudad) + sizeof(nombreCiudad) ));
+		leerArchivo.read(reinterpret_cast<char*>(&IdCiudad), sizeof(IdCiudad) );
+		leerArchivo.read(reinterpret_cast<char*>(&nombreCiudad), sizeof(nombreCiudad) );		
+		cout << "Codigo Ciudad : " << IdCiudad <<endl;
+		cout << "Nombre: " << nombreCiudad << endl;	
+
+	}else
+	
+		cout << "No se ha encontrado"<<endl;
+	
+	leerArchivo.close();
+}
+
+void buscarPersona(unsigned long key){
+
+	char IdClient[15];
+	char NameClient[40];
+	char Gender[2];
+	char IdCiudad[6];
+	int position = posicionIndice(llaveCliente, key);
+	ifstream readFile("persoas.bin", ios::binary);
+	if (position != -1){
+		string rrn = rrnCliente.at(position);
+		readFile.seekg(HeaderSize + atoi((rrn).c_str())*( sizeof(IdClient) + sizeof(NameClient) + sizeof(Gender) + sizeof(IdCiudad) ));
+		readFile.read(reinterpret_cast<char*>(&IdClient), sizeof(IdClient) );
+		readFile.read(reinterpret_cast<char*>(&NameClient), sizeof(NameClient) );		
+		readFile.read(reinterpret_cast<char*>(&Gender), sizeof(Gender) );
+		readFile.read(reinterpret_cast<char*>(&IdCiudad), sizeof(IdCiudad) );		
+		cout << "Id Cliente : " << IdClient <<endl;
+		cout << "Nombre del cliente: " << NameClient << endl;	
+		cout << "Genero: " << Gender <<endl;
+		cout << "ID Ciudad: " << IdCiudad << endl;	
+	}else
+		cout << "El registro no se encuentra entre los datos."<< endl;
+	
+	readFile.close();
+}
+
+
+void buscarNumero(int num){
+
+}
+
